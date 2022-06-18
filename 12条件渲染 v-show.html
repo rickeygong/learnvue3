@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="counter">
+      <p>另一个用于条件性展示元素的选项是 v-show 指令。用法大致一样</p>
+      <h1 v-show="ok">Hello!</h1>
+    </div>
+  </body>
+  <!-- 1.引入Vue框架 -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    // 2.初始化Vue框架
+    const Counter = {
+      data() {
+        return {
+          counter: 0,
+          ok: 'true',
+        };
+      },
+    };
+
+    Vue.createApp(Counter).mount('#counter');
+  </script>
+</html>
