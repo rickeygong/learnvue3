@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="counter">
+      <p>一些指令能够接收一个“参数”，在指令名称之后以冒号表示。例如，v-bind 指令可以用于响应式地更新 HTML attribute：</p>
+      <a v-bind:href="url"> Bai Du </a>
+      <p>v-on 指令，它用于监听 DOM 事件</p>
+      <button v-on:click="doSomething">doSomething Button</button>
+      <h2>v-bind缩写</h2>
+      <!-- 完整语法 -->
+      <a v-bind:href="url"> ... </a>
+
+      <!-- 缩写 -->
+      <a :href="url"> ... </a>
+
+      <!-- 动态参数的缩写 -->
+      <a :[key]="url"> ... </a>
+      <h2>v-on缩写</h2>
+      <!-- 完整语法 -->
+      <a v-on:click="doSomething"> ... </a>
+
+      <!-- 缩写 -->
+      <a @click="doSomething"> ... </a>
+
+      <!-- 动态参数的缩写 -->
+      <a @[event]="doSomething"> ... </a>
+    </div>
+  </body>
+  <!-- 1.引入Vue框架 -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    // 2.初始化Vue框架
+    const Counter = {
+      data() {
+        return {
+          counter: 0,
+          url: 'https://www.baidu.com/',
+        };
+      },
+      methods: {
+        doSomething() {
+          alert('晚上好');
+        },
+      },
+    };
+
+    Vue.createApp(Counter).mount('#counter');
+  </script>
+</html>

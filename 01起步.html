@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="counter">Counter: {{ counter }}</div>
+  </body>
+  <!-- 1.引入Vue框架 -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    // 初始化Vue框架
+    const Counter = {
+      data() {
+        return {
+          counter: 0,
+        };
+      },
+    };
+
+    Vue.createApp(Counter).mount('#counter');
+  </script>
+</html>

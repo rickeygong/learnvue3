@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #abcd {
+        color: red;
+        border: 1px solid blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="counter">
+      <p>数据绑定最常见的形式就是使用“Mustache” (双大括号) 语法的文本插值：</p>
+      <span>Message: {{ msg }}</span>
+      <p>通过使用 v-once 指令，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上的其它数据绑定：</p>
+      <span v-once>这个将不会改变: {{ msg }}</span>
+      <p>双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用v-html 指令：</p>
+      <p>Using mustaches: {{ rawHtml }}</p>
+      <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+      <p>Mustache 语法不能在 HTML attribute 中使用，然而，可以通过 v-bind 指令，绑定到HTML属性</p>
+      <p v-bind:id="idValue">我把id绑定到这个p标签了</p>
+    </div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    const Counter = {
+      data() {
+        return {
+          msg: '大兄弟，好好学习啊！',
+          rawHtml: '<span style="color: red">This should be red.</span>',
+          idValue: 'abcd',
+        };
+      },
+    };
+
+    Vue.createApp(Counter).mount('#counter');
+  </script>
+</html>
