@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <div id="counter">
+      <h1>登录</h1>
+      <p><label>User Name</label> <input type="text" v-model="username" /></p>
+      <p><label>User Email</label> <input type="text" v-model="useremail" /></p>
+      <p><button @click="login()">login</button></p>
+      <h3>已登录用户</h3>
+      <p v-show="userinfo.length == 0">目前没有用户登录</p>
+      <div v-for="user in userinfo">
+        <p>User Name:{{user.username}}</p>
+        <p>User Email:{{user.useremail}}</p>
+        <br />
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    const Counter = {
+      data() {
+        return {
+          username: '',
+          useremail: '',
+          userinfo: [],
+        };
+      },
+      methods: {
+        login() {
+          this.userinfo.push({
+            username: this.username,
+            useremail: this.useremail,
+          });
+          this.username = '';
+          this.useremail = '';
+        },
+      },
+    };
+
+    Vue.createApp(Counter).mount('#counter');
+  </script>
+</html>
