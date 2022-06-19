@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <div id="counter">
+      <img src="./img/vue生命周期图示.svg" alt="" />
+    </div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    const Counter = {
+      beforeCreate() {
+        console.log('这里是 beforeCreate');
+        //document.createElement 之前
+      },
+      created() {
+        console.log('这里是 created');
+        //document.createElement 之后
+      },
+      beforeMount() {
+        console.log('这里是 beforeMount');
+        //document.bode.append 之前
+      },
+      mounted() {
+        console.log('这里是 mounted');
+        //document.bode.append 之后
+      },
+
+      data() {
+        return {
+          counter: 0,
+        };
+      },
+    };
+
+    Vue.createApp(Counter).mount('#counter');
+  </script>
+</html>

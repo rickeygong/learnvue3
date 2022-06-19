@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>表格操作</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        margin: 10px 0;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="counter">
+      <button @click="showBox()">{{isShow?"隐藏添加":"显示添加"}}</button>
+      <div v-show="isShow">
+        <input v-model="name" type="text" placeholder="姓名" />
+        <input v-model="score" type="text" placeholder="分数" />
+        <button v-on:click="add()">确认添加</button>
+      </div>
+      <table id="students">
+        <tr>
+          <th>姓名</th>
+          <th>分数</th>
+          <th>操作</th>
+        </tr>
+        <tr v-for="(student,index) in students">
+          <td>{{student.name}}</td>
+          <td>{{student.score}}</td>
+          <td><button @click="del(index)">删除</button></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    const Counter = {
+      mounted() {
+        if (localStorage.database) {
+          this.students = JSON.parse(localStorage.database);
+        }
+      },
+      data() {
+        return {
+          counter: 0,
+          students: [
+            {
+              name: '小明',
+              score: '80',
+            },
+            {
+              name: '小红',
+              score: '90',
+            },
+            {
+              name: '小李',
+              score: '60',
+            },
+          ],
+          isShow: false,
+        };
+      },
+      methods: {
+        del(index) {
+          this.removeByIndex(this.students, index);
+          localStorage.database = JSON.stringify(this.students);
+        },
+        removeByIndex(array, index) {
+          //思路
+          //1.循环把下标之后的元素往前移动
+          //2.弹出最后一个元素
+          for (let i = index; i < array.length - 1; i++) {
+            array[i] = array[i + 1];
+          }
+          array.pop();
+        },
+        add() {
+          this.students.push({ name: this.name, score: this.score });
+          this.name = '';
+          this.score = '';
+          //保存数据到浏览器
+          localStorage.database = JSON.stringify(this.students);
+        },
+        showBox() {
+          this.isShow = !this.isShow;
+        },
+      },
+    };
+
+    Vue.createApp(Counter).mount('#counter');
+  </script>
+</html>

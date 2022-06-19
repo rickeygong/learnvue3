@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>计算属性</title>
+    <style>
+      .demo {
+        font-family: sans-serif;
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 20px 30px;
+        margin-top: 1em;
+        margin-bottom: 40px;
+        user-select: none;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="computed-basics">
+      <h1>对于任何包含响应式数据的复杂逻辑，你都应该使用计算属性</h1>
+      <div class="demo">
+        <p>Has published books:</p>
+        <span>{{ publishedBooksMessage }}</span>
+      </div>
+      <div class="demo">
+        <input type="text" v-model="firstname" placeholder="姓" />
+        <input type="text" v-model="lastname" placeholder="名" />
+        <div><input type="text" v-model="fullname" placeholder="姓名" /></div>
+        <p>{{fullname}}</p>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    Vue.createApp({
+      data() {
+        return {
+          author: {
+            name: 'John Doe',
+            books: ['Vue 2 - Advanced Guide', 'Vue 3 - Basic Guide', 'Vue 4 - The Mystery'],
+          },
+          firstname: '',
+          lastname: '',
+        };
+      },
+      computed: {
+        // a computed getter
+        publishedBooksMessage() {
+          // `this` points to the vm instance
+          return this.author.books.length > 0 ? 'Yes' : 'No';
+        },
+        fullname: {
+          get() {
+            if (this.firstname && this.lastname) {
+              return this.firstname + '·' + this.lastname;
+            } else {
+              return '';
+            }
+          },
+          set(value) {
+            console.log(value);
+            const arr = value.split('·');
+            console.log(arr);
+            this.firstname = arr[0];
+            this.lastname = arr[1];
+          },
+        },
+        // fullname() {
+        //   if (this.firstname && this.lastname) {
+        //     return this.firstname + '·' + this.lastname;
+        //   } else {
+        //     return '';
+        //   }
+        // },
+      },
+    }).mount('#computed-basics');
+  </script>
+</html>

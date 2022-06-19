@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>组件基础</title>
+    <style>
+      .demo {
+        font-family: sans-serif;
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 20px 30px;
+        margin-top: 1em;
+        margin-bottom: 40px;
+        user-select: none;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <button-counter></button-counter>
+      <!-- 复用组件 -->
+      <button-counter></button-counter>
+      <!-- 复用组件 -->
+      <button-counter></button-counter>
+    </div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    const Counter = {
+      data() {
+        return {
+          counter: 0,
+        };
+      },
+    };
+
+    //1.
+    const app = Vue.createApp(Counter);
+    //2.
+    app.component('button-counter', {
+      data() {
+        return {
+          count: 0,
+        };
+      },
+      template: `
+    <button @click="count++">
+      You clicked me {{ count }} times.
+    </button>`,
+    });
+    //3.
+    app.mount('#app');
+  </script>
+</html>
