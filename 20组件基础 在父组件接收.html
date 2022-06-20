@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>通过 Prop 向子组件传递数据</title>
+    <style>
+      .demo {
+        font-family: sans-serif;
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 20px 30px;
+        margin-top: 1em;
+        margin-bottom: 40px;
+        user-select: none;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="demo">
+        <!-- 注意区分下面2种写法：一种是v-bind绑定，一种不需要。v-bind绑定的话对应的是一个表达式，需要在里面加引号括起来。 -->
+        <mycomponent :content="'你是帅哥吗？'" @yes="saiHi" @haha="myhaha"><h1>lu lu lu ···</h1></mycomponent>
+        <mycomponent content="你是帅哥吗？" @yes="saiHi" @haha="myhaha">晚上好</mycomponent>
+        {{mycontent}}
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    const App = {
+      data() {
+        return {
+          mycontent: '',
+        };
+      },
+      methods: {
+        saiHi(value) {
+          console.log('Hi，你好啊');
+          this.mycontent = 'ba ba ba ba ····';
+          console.log(`saiHi:${value}`);
+        },
+        myhaha() {
+          console.log('ha ha ha ···');
+        },
+      },
+    };
+    const app = Vue.createApp(App);
+
+    app.component('mycomponent', {
+      props: ['content'],
+      data() {
+        return {
+          usersay: '',
+        };
+      },
+      template: `
+        <div>
+          <h4>{{ content }}</h4>
+          <slot></slot>
+          <button @click="yes">是的</button>
+          <button @click="no">不是</button>
+          <div><input type="text" v-model="usersay" placeholder="用户反馈" /></div>
+          
+        </div>
+
+      `,
+      methods: {
+        yes() {
+          console.log('是的');
+          this.$emit('yes', this.usersay);
+        },
+        no() {
+          console.log('不是');
+          this.$emit('haha');
+        },
+      },
+    });
+
+    app.mount('#app');
+  </script>
+</html>

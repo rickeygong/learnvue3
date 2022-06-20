@@ -22,12 +22,12 @@
     <h3>Prop 是你可以在组件上注册的一些自定义 attribute。</h3>
     <div id="blog-post-demo">
       <div class="demo">
-        <blog-post title="My journey with Vue"></blog-post>
-        <blog-post title="Blogging with Vue"></blog-post>
-        <blog-post title="Why Vue is so fun"></blog-post>
+        <blog-post content="My journey with Vue"></blog-post>
+        <blog-post content="Blogging with Vue"></blog-post>
+        <blog-post content="Why Vue is so fun"></blog-post>
       </div>
       <div class="demo">
-        <blog-post v-for="item in posts" :key="item.id" v-bind:title="item.title"></blog-post>
+        <blog-post v-for="item in posts" :key="item.id" v-bind:content="item.title"></blog-post>
       </div>
     </div>
   </body>
@@ -47,8 +47,8 @@
     const app = Vue.createApp(App);
 
     app.component('blog-post', {
-      props: ['title'],
-      template: `<h4>{{ title }}</h4>`,
+      props: ['content'],
+      template: `<h4>{{ content }}</h4>`,
     });
 
     app.mount('#blog-post-demo');
