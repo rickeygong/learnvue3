@@ -163,20 +163,12 @@
     <div id="app">
       <div class="container">
         <h1 class="title">消息墙（Vue版）</h1>
-        <!-- 发布输入框 start -->
-        <input-dialog v-show="isPublish"></input-dialog>
-        <!-- 发布输入框 end -->
+        <!-- 发布输入框-->
+        <input-dialog v-show="isPublish" @quxiao="quxiaole" @queren="queren"></input-dialog>
+
         <div class="posts"></div>
-        <div class="post" v-for="post in posts">
-          <div class="content">{{post.content}}</div>
-          <div class="bottom">
-            <div class="time">{{formatTime(post.publish_time)}}</div>
-            <div class="buttons">
-              <div class="button edit">编辑</div>
-              <div class="button delete">删除</div>
-            </div>
-          </div>
-        </div>
+        <!-- 消息列表 -->
+        <message v-for="post in posts" :post-id="post.post_id" :content="post.content" :publish-time="post.publish_time"></message>
         <div class="empty" v-if="posts.length === 0">什么消息都没有</div>
       </div>
       <div class="publish" @click="isPublish = !isPublish">发布</div>
@@ -185,12 +177,6 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
   <script>
     const App = {
-      async mounted() {
-        //获取服务器列表数据
-        const response = await this.getPosts();
-        const data = await response.json();
-        this.posts = data.results;
-      },
       data() {
         return {
           //消息数据列表
@@ -198,31 +184,106 @@
           isPublish: false,
         };
       },
+      async mounted() {
+        //获取服务器列表数据
+        await this.refresh();
+      },
       methods: {
+        async refresh() {
+          const response = await this.getPosts();
+          const data = await response.json();
+          this.posts = data.results;
+        },
+        async queren(value) {
+          //发布消息
+          await this.createPost(value);
+          await this.refresh();
+          this.isPublish = !this.isPublish;
+        },
+        quxiaole(value) {
+          this.isPublish = !this.isPublish;
+        },
         getPosts() {
           const url = new URL('https://3yya.com/u/459b08af9653804b/rest/app/posts');
           return fetch(url);
         },
+        createPost(content) {
+          if (content.length <= 0) {
+            alert('请输入内容!');
+            return;
+          }
+          let data = {
+            content: content,
+          };
+          return fetch('https://3yya.com/u/459b08af9653804b/rest/app/posts', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+        },
+      },
+    };
+    const app = Vue.createApp(App);
+    app.component('message', {
+      props: ['content', 'publishTime', 'postId'],
+      template: `
+        <div class="post">
+          <div class="content">{{content}}</div>
+          <div class="bottom">
+            <div class="time">{{formatTime(publishTime)}}</div>
+            <div class="buttons">
+              <div class="button edit">编辑</div>
+              <div class="button delete" @click="remove" @updatepage="refresh">删除</div>
+            </div>
+          </div>
+        </div>
+        `,
+      methods: {
         formatTime(timestamp) {
           //时间戳转换
           const time = new Date(timestamp * 1000);
           return `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} ${time.getHours()}:${time.getMinutes()}`;
         },
+        async remove() {
+          await this.deletePost(this.postId);
+          //   await this.refresh();
+          //   await this.$emit('updatepage');
+        },
+        deletePost(id) {
+          return fetch(`https://3yya.com/u/459b08af9653804b/rest/app/posts/${id}`, {
+            method: 'DELETE',
+          });
+        },
       },
-    };
-    const app = Vue.createApp(App);
+    });
     app.component('input-dialog', {
-      templete: `
+      template: `
         <div class="post input-dialog">
-          <textarea class="input-content" placeholder="请输入消息"></textarea>
+          <textarea class="input-content" placeholder="请输入消息" v-model="textInput"></textarea>
           <div class="bottom">
             <div class="buttons">
-              <div class="button confirm" onclick="confirm()">确认</div>
-              <div class="button cancel" onclick="cancel()">取消</div>
+              <div class="button confirm" @click="confirm">确认</div>
+              <div class="button cancel" @click="cancel">取消</div>
             </div>
           </div>
         </div>
       `,
+      data() {
+        return {
+          textInput: '',
+        };
+      },
+      methods: {
+        cancel() {
+          this.$emit('quxiao', '我是子组件传来的值，给我接好');
+        },
+        confirm() {
+          //console.log(this.textInput);
+          this.$emit('queren', this.textInput);
+        },
+      },
     });
     app.mount('#app');
   </script>
