@@ -129,6 +129,9 @@
         opacity: 1;
       }
 
+      .cancel {
+        background-color: #fb5632;
+      }
       .container .input-dialog .bottom .buttons .cancel {
         background-color: #fb5632;
       }
@@ -164,11 +167,11 @@
       <div class="container">
         <h1 class="title">消息墙（Vue版）</h1>
         <!-- 发布输入框-->
-        <input-dialog v-show="isPublish" @quxiao="quxiaole" @queren="queren"></input-dialog>
+        <input-dialog v-show="isPublish" @quxiao="quxiao" @queren="queren"></input-dialog>
 
         <div class="posts"></div>
         <!-- 消息列表 -->
-        <message v-for="post in posts" :post-id="post.post_id" :content="post.content" :publish-time="post.publish_time"></message>
+        <message v-for="post in posts" :post-id="post.post_id" :content="post.content" :publish-time="post.publish_time" @updatepage="refresh" @updatepageaaa="refresh"></message>
         <div class="empty" v-if="posts.length === 0">什么消息都没有</div>
       </div>
       <div class="publish" @click="isPublish = !isPublish">发布</div>
@@ -189,7 +192,8 @@
         await this.refresh();
       },
       methods: {
-        async refresh() {
+        async refresh(value) {
+          console.log(value);
           const response = await this.getPosts();
           const data = await response.json();
           this.posts = data.results;
@@ -200,7 +204,8 @@
           await this.refresh();
           this.isPublish = !this.isPublish;
         },
-        quxiaole(value) {
+        quxiao(value) {
+          console.log(value);
           this.isPublish = !this.isPublish;
         },
         getPosts() {
@@ -229,25 +234,69 @@
     app.component('message', {
       props: ['content', 'publishTime', 'postId'],
       template: `
-        <div class="post">
-          <div class="content">{{content}}</div>
+        <div class="post" v-if="isExist">
+            <textarea v-if="isEdit" class="input-content" placeholder="请输入消息" v-model="selfContent"></textarea>
+          <div v-else class="content">{{selfContent}}</div>
           <div class="bottom">
             <div class="time">{{formatTime(publishTime)}}</div>
             <div class="buttons">
-              <div class="button edit">编辑</div>
-              <div class="button delete" @click="remove" @updatepage="refresh">删除</div>
+              <div v-if="isEdit" class="button edit" @click="confirm">确认</div>
+              <div v-else class="button edit" @click="edit">编辑</div>
+              <div v-if="isEdit" class="button cancel" @click="cancel" >取消</div>
+              <div v-else class="button delete" @click="remove" >删除</div>
             </div>
           </div>
         </div>
         `,
+      data() {
+        return {
+          isExist: true,
+          //是否为编辑状态
+          isEdit: false,
+          //内容
+          selfContent: this.content,
+        };
+      },
       methods: {
         formatTime(timestamp) {
           //时间戳转换
           const time = new Date(timestamp * 1000);
           return `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} ${time.getHours()}:${time.getMinutes()}`;
         },
+        edit() {
+          //切换到编辑状态
+          this.isEdit = !this.isEdit;
+        },
+        async confirm() {
+          await this.updatePost(this.postId, this.selfContent);
+          //取消编辑状态
+          this.edit();
+          await this.$emit('updatepageaaa', '我是message组件的confirm()，我来了');
+        },
+        cancel() {
+          this.edit();
+          this.selfContent = this.content;
+        },
+        updatePost(postid, content) {
+          // if (content.length <= 0) {
+          //   alert('更新的消息不能为空!');
+          //   return;
+          // }
+          let data = {
+            content: content,
+          };
+
+          return fetch(`https://3yya.com/u/459b08af9653804b/rest/app/posts/${postid}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+        },
         async remove() {
-          //   await this.deletePost(this.postId);
+          await this.deletePost(this.postId);
+          //   this.isExist = false;
           //   await this.refresh();
           this.$emit('updatepage', '我是message组件的remove()，我来了');
         },
@@ -261,7 +310,7 @@
     app.component('input-dialog', {
       template: `
         <div class="post input-dialog">
-          <textarea class="input-content" placeholder="请输入消息" v-model="textInput"></textarea>
+          <textarea class="input-content" placeholder="请输入消息" v-model="content"></textarea>
           <div class="bottom">
             <div class="buttons">
               <div class="button confirm" @click="confirm">确认</div>
@@ -272,16 +321,16 @@
       `,
       data() {
         return {
-          textInput: '',
+          content: '',
         };
       },
       methods: {
         cancel() {
           this.$emit('quxiao', '我是子组件传来的值，给我接好');
         },
-        confirm() {
+        async confirm() {
           //console.log(this.textInput);
-          this.$emit('queren', this.textInput);
+          this.$emit('queren', this.content);
         },
       },
     });
