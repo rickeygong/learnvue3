@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .demo {
+        padding: 20px;
+        background-color: pink;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- <input type="text" v-model="searchText" /> -->
+      <custom-input v-model="searchText"></custom-input>
+      <button @click="show">打印</button>
+    </div>
+  </body>
+</html>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+<script>
+  const App = {
+    data() {
+      return {
+        searchText: '搜索文本',
+      };
+    },
+    methods: {
+      show() {
+        console.log(this.searchText);
+      },
+    },
+  };
+  const app = Vue.createApp(App);
+  app.component('custom-input', {
+    props: ['modelValue'],
+    emits: ['update:modelValue'],
+    template: `
+    <div class="demo">
+      <input
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
+      >
+    </div>
+  `,
+    data() {
+      return {};
+    },
+  });
+  app.mount('#app');
+</script>
