@@ -247,9 +247,9 @@
           return `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} ${time.getHours()}:${time.getMinutes()}`;
         },
         async remove() {
-          await this.deletePost(this.postId);
+          //   await this.deletePost(this.postId);
           //   await this.refresh();
-          //   await this.$emit('updatepage');
+          this.$emit('updatepage', '我是message组件的remove()，我来了');
         },
         deletePost(id) {
           return fetch(`https://3yya.com/u/459b08af9653804b/rest/app/posts/${id}`, {
