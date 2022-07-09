@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>模板引用</title>
+  </head>
+  <body>
+    <!-- 模板引用可以简单地理解为在父组件中调用子组件的方法或者获取子组件的数据 -->
+    <div id="app">
+      <!-- ①在子组件上定义ref属性，用于指定引用id -->
+      <mycomponent ref="aaabbbccc"></mycomponent>
+      <button @click="excute">调用子组件的方法</button>
+    </div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    const App = {
+      data() {
+        return {
+          counter: 0,
+        };
+      },
+      methods: {
+        excute() {
+          //②在父组件的方法中通过 this.$refs.xxxx方式调用
+          //console.log(this.$refs.aaabbbccc.sayHi()); //调用方法
+          this.$refs.aaabbbccc.sayHi();
+          console.log(this.$refs.aaabbbccc.info); //获取子组件数据
+          //this.$refs.aaabbbccc.info = "摩西 摩西";//改变子组件数据
+        },
+      },
+    };
+    const app = Vue.createApp(App);
+    app.component('mycomponent', {
+      data() {
+        return {
+          info: '你好吗',
+        };
+      },
+      methods: {
+        sayHi() {
+          console.log('晚安 晚安 晚安');
+        },
+      },
+    });
+    app.mount('#app');
+  </script>
+</html>

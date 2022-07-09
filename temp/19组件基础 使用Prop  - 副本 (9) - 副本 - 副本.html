@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>通过 Prop 向子组件传递数据</title>
+    <style>
+      .demo {
+        font-family: sans-serif;
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 20px 30px;
+        margin-top: 1em;
+        margin-bottom: 40px;
+        user-select: none;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Prop 是你可以在组件上注册的一些自定义 attribute。</h3>
+    <div id="blog-post-demo">
+      <div class="demo">
+        <blog-post content="My journey with Vue"></blog-post>
+        <blog-post content="Blogging with Vue"></blog-post>
+        <blog-post content="Why Vue is so fun"></blog-post>
+      </div>
+      <div class="demo">
+        <blog-post v-for="item in posts" :key="item.id" v-bind:content="item.title"></blog-post>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+  <script>
+    const App = {
+      data() {
+        return {
+          posts: [
+            { id: 1, title: 'v2.0 My journey with Vue' },
+            { id: 2, title: 'v2.0 Blogging with Vue' },
+            { id: 3, title: 'v2.0 Why Vue is so fun' },
+          ],
+        };
+      },
+    };
+    const app = Vue.createApp(App);
+
+    app.component('blog-post', {
+      props: ['content'],
+      template: `<h4>{{ content }}</h4>`,
+    });
+
+    app.mount('#blog-post-demo');
+  </script>
+</html>
